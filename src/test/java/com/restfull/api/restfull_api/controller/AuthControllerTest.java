@@ -54,7 +54,7 @@ public class AuthControllerTest {
         request.setPassword("test");
 
         mockMvc.perform(
-                post("/api/auth/login")
+                post("/api/v1/auth/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -83,7 +83,7 @@ public class AuthControllerTest {
         request.setPassword("salah");
 
         mockMvc.perform(
-                post("/api/auth/login")
+                post("/api/v1/auth/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -111,7 +111,7 @@ public class AuthControllerTest {
         request.setPassword("test");
 
         mockMvc.perform(
-                post("/api/auth/login")
+                post("/api/v1/auth/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -136,7 +136,7 @@ public class AuthControllerTest {
     void getUserUnauthorized() throws Exception{
 
         mockMvc.perform(
-            get("/api/users/current")
+            get("/api/v1/users/current")
             .accept(MediaType.APPLICATION_JSON)
             .header("X-API-TOKEN", "not found")
         ).andExpectAll(
@@ -153,7 +153,7 @@ public class AuthControllerTest {
     void getUserUnauthorizedTokenNotSend() throws Exception{
 
         mockMvc.perform(
-            get("/api/users/current")
+            get("/api/v1/users/current")
             .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
             status().isUnauthorized()
@@ -177,7 +177,7 @@ public class AuthControllerTest {
         userRepository.save(user);
 
         mockMvc.perform(
-            get("/api/users/current")
+            get("/api/v1/users/current")
             .accept(MediaType.APPLICATION_JSON)
             .header("X-API-TOKEN", "test")
         ).andExpect(status().isOk());
@@ -196,7 +196,7 @@ public class AuthControllerTest {
         userRepository.save(user);
 
         mockMvc.perform(
-            get("/api/users/current")
+            get("/api/v1/users/current")
             .accept(MediaType.APPLICATION_JSON)
             .header("X-API-TOKEN", "test")
         ).andExpect(status().isUnauthorized());
@@ -209,7 +209,7 @@ public class AuthControllerTest {
         UpdateUserRequest request = new UpdateUserRequest();
 
         mockMvc.perform(
-            patch("/api/users/current")
+            patch("/api/v1/users/current")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))
@@ -238,7 +238,7 @@ public class AuthControllerTest {
         userRepository.save(user);
 
         mockMvc.perform(
-            patch("/api/users/current")
+            patch("/api/v1/users/current")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))
@@ -259,7 +259,7 @@ public class AuthControllerTest {
     @Test
     void logoutFailed() throws Exception {
         mockMvc.perform(
-            delete("/api/auth/logout")
+            delete("/api/v1/auth/logout")
             .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
             status().isUnauthorized()
@@ -283,7 +283,7 @@ public class AuthControllerTest {
         userRepository.save(user);
 
         mockMvc.perform(
-            delete("/api/auth/logout")
+            delete("/api/v1/auth/logout")
             .header("X-API-TOKEN", "test")
             .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
