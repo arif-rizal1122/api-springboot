@@ -15,7 +15,9 @@ import com.restfull.api.model.CreateAddressRequest;
 import com.restfull.api.repository.AddressRepository;
 import com.restfull.api.repository.ContactRepository;
 
+import jakarta.transaction.Transactional;
 
+@Transactional
 @Service
 public class AddressService {
     
@@ -59,6 +61,17 @@ public class AddressService {
         .country(address.getCountry())
         .build();
     }
+
+
+    public  AddressResponse get(User user, String contactId, String addressId){
+        Contact contact = contactRepository.findFirstByUserAndId(user, contactId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "contact id not found!!"));
+
+        Address address = addressRepository.findFirstByContactAndId(contact, addressId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "address is not found"));
+
+        return toAddressResponse(address);
+    }  
 
 
 
