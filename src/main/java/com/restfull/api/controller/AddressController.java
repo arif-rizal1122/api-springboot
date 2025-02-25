@@ -39,17 +39,14 @@ public class AddressController {
 
 
     @GetMapping(
-        path = "/contacts/{contactId}/addresses/{address}",
+        path = "/contacts/{contactId}/addresses/{addressId}",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<AddressResponse> get(
-        User user,
+    public WebResponse<AddressResponse> get(User user,
         @PathVariable("contactId") String contactId,
-        @PathVariable("addressId") String addressId
-    ){
-
-    AddressResponse response = addressService.get(user, contactId, addressId);
-    return WebResponse.<AddressResponse>builder().data(response).build();
+        @PathVariable("addressId") String addressId) {
+        AddressResponse addressResponse = addressService.get(user, contactId, addressId);
+        return WebResponse.<AddressResponse>builder().data(addressResponse).build();
     }
 
 }

@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.restfull.api.entity.Address;
 import com.restfull.api.entity.Contact;
 import com.restfull.api.entity.User;
 import com.restfull.api.model.AddressResponse;
@@ -124,6 +125,57 @@ public class AddressControllerTest {
         });
     }
 
+
+
+    @Test
+    void getAddressNotFound() throws Exception {
+        mockMvc.perform(
+                get("/api/v1/addr/contacts/test2/addresses/test2")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-API-TOKEN", "contact1")
+        ).andExpectAll(
+                status().isNotFound()
+        ).andDo(result -> {
+            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void getAddressSuccess() throws Exception {
+        Contact contact = contactRepository.findById("test1").orElseThrow();
+
+        Address address = new Address();
+        address.setId("test");
+        address.setContact(contact);
+        address.setStreet("Jalan");
+        address.setCity("Jakarta");
+        address.setProvince("DKI");
+        address.setCountry("Indonesia");
+        address.setPostalCode("123123");
+        addressRepository.save(address);
+
+        mockMvc.perform(
+                get("/api/v1/addr/contacts/test1/addresses/test")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-API-TOKEN", "contact1")
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+            WebResponse<AddressResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+            assertNull(response.getErrors());
+            assertEquals(address.getId(), response.getData().getId());
+            assertEquals(address.getStreet(), response.getData().getStreet());
+            assertEquals(address.getCity(), response.getData().getCity());
+            assertEquals(address.getProvince(), response.getData().getProvince());
+            assertEquals(address.getCountry(), response.getData().getCountry());
+            assertEquals(address.getPostalCode(), response.getData().getPostalCode());
+        });
+    }
 
 
 }
