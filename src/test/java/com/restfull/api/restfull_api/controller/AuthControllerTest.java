@@ -169,8 +169,8 @@ public class AuthControllerTest {
     void getUserSuccess() throws Exception {
         User user = new User();
         user.setUsername("test");
-        user.setPassword(BCrypt.hashpw("rahasia", BCrypt.gensalt()));
-        user.setName("Test");
+        user.setPassword(BCrypt.hashpw("test", BCrypt.gensalt()));
+        user.setName("test");
         user.setToken("test");
         user.setTokenExpiredAt(System.currentTimeMillis() + 60000); // Pastikan token valid
 
@@ -188,7 +188,7 @@ public class AuthControllerTest {
     void getUserTokenExpired() throws Exception {
         User user = new User();
         user.setUsername("test");
-        user.setPassword(BCrypt.hashpw("rahasia", BCrypt.gensalt()));
+        user.setPassword(BCrypt.hashpw("test", BCrypt.gensalt()));
         user.setName("test");
         user.setToken("test");
         user.setTokenExpiredAt(System.currentTimeMillis() - 60000); // Pastikan token valid

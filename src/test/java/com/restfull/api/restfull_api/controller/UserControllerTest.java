@@ -47,8 +47,8 @@ class UserControllerTest {
     void testRegisterSuccess() throws Exception {
         RegisterUserRequest request = new RegisterUserRequest();
         request.setUsername("test");
-        request.setPassword("rahasia");
-        request.setName("Test");
+        request.setPassword("test");
+        request.setName("test");
 
         mockMvc.perform(
                 post("/api/v1/users")
@@ -71,14 +71,14 @@ class UserControllerTest {
     void testRegisterDuplicate() throws Exception {
         User user = new User();
         user.setUsername("test");
-        user.setPassword(BCrypt.hashpw("rahasia", BCrypt.gensalt()));
-        user.setName("Test");
+        user.setPassword(BCrypt.hashpw("test", BCrypt.gensalt()));
+        user.setName("test");
         userRepository.save(user);
 
         RegisterUserRequest request = new RegisterUserRequest();
         request.setUsername("test");
-        request.setPassword("rahasia");
-        request.setName("Test");
+        request.setPassword("test");
+        request.setName("test");
 
         mockMvc.perform(
                 post("/api/v1/users")
