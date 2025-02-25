@@ -22,7 +22,7 @@ public class AddressController {
     private AddressService addressService;
 
     @PostMapping(
-        path = "contacts/{contactId}/addresses"
+        path = "/contacts/{contactId}/addresses"
     )
     public WebResponse<AddressResponse> create(User user, 
             @RequestBody CreateAddressRequest request, 

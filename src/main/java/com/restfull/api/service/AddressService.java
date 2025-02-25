@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.restfull.api.entity.Address;
@@ -14,6 +15,8 @@ import com.restfull.api.model.CreateAddressRequest;
 import com.restfull.api.repository.AddressRepository;
 import com.restfull.api.repository.ContactRepository;
 
+
+@Service
 public class AddressService {
     
     @Autowired
