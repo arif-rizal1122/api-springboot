@@ -96,5 +96,14 @@ public class AddressService {
     }
 
 
+    @Transactional
+    public void remove(User user,  String contactId, String addressId)
+    {
+        Contact contact = contactRepository.findFirstByUserAndId(user, contactId)
+         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "address is not found!!"));
+         Address address = addressRepository.findFirstByContactAndId(contact, addressId)
+         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "address is not found!!"));
+         addressRepository.delete(address);
+    }
 
 }
