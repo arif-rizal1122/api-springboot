@@ -12,6 +12,7 @@ import com.restfull.api.entity.Contact;
 import com.restfull.api.entity.User;
 import com.restfull.api.model.AddressResponse;
 import com.restfull.api.model.CreateAddressRequest;
+import com.restfull.api.model.UpdateAddressRequest;
 import com.restfull.api.repository.AddressRepository;
 import com.restfull.api.repository.ContactRepository;
 
@@ -69,8 +70,29 @@ public class AddressService {
 
         Address address = addressRepository.findFirstByContactAndId(contact, addressId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Address is not found"));
-
         return toAddressResponse(address);
+    }
+
+
+
+
+
+    @Transactional
+    public AddressResponse update(User user, UpdateAddressRequest request){
+         validationService.validate(request);
+         Contact contact = contactRepository.findFirstByUserAndId(user, request.getContactId())
+         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "address is not found!!"));
+
+         Address address = addressRepository.findFirstByContactAndId(contact, request.getAddressId())
+         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "address is not found!!"));
+
+         address.setStreet(request.getStreet());
+         address.setPostalCode(request.getPostalCode());
+         address.setCity(request.getCity());
+         address.setProvince(request.getProvince());
+         address.setCountry(request.getCountry());
+         addressRepository.save(address);
+         return toAddressResponse(address);
     }
 
 

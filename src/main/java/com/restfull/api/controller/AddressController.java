@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.restfull.api.entity.User;
 import com.restfull.api.model.AddressResponse;
 import com.restfull.api.model.CreateAddressRequest;
+import com.restfull.api.model.UpdateAddressRequest;
 import com.restfull.api.model.WebResponse;
 import com.restfull.api.service.AddressService;
 
@@ -48,5 +50,26 @@ public class AddressController {
         AddressResponse addressResponse = addressService.get(user, contactId, addressId);
         return WebResponse.<AddressResponse>builder().data(addressResponse).build();
     }
+
+
+
+    @PutMapping(
+        path = "/contacts/{contactId}/addresses/{addressId}",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<AddressResponse> update(User user,
+        @RequestBody UpdateAddressRequest request,
+        @PathVariable("contactId") String contactId,
+        @PathVariable("addressId") String addressId){
+
+        request.setContactId(contactId);
+        request.setAddressId(addressId);
+    
+        AddressResponse response = addressService.update(user, request);
+        return WebResponse.<AddressResponse>builder().data(response).build();
+    }
+
+
 
 }
