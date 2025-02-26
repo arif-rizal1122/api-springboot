@@ -1,5 +1,6 @@
 package com.restfull.api.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +105,16 @@ public class AddressService {
          Address address = addressRepository.findFirstByContactAndId(contact, addressId)
          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "address is not found!!"));
          addressRepository.delete(address);
+    }
+
+
+    @Transactional
+    public List<AddressResponse> listAddress(User user, String contactId){
+        Contact contact = contactRepository.findFirstByUserAndId(user, contactId)
+         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "address is not found!!"));
+    
+        List<Address> addresses = addressRepository.findAllByContact(contact);
+        return addresses.stream().map(this::toAddressResponse).toList();
     }
 
 }

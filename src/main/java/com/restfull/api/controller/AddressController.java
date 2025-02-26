@@ -1,5 +1,7 @@
 package com.restfull.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -83,5 +85,16 @@ public class AddressController {
         return WebResponse.<String>builder().data("OK").build();
     }
 
+
+    @GetMapping(
+        path = "/contacts/{contactId}/addresses",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<List<AddressResponse>> listAddress(User user,
+        @PathVariable("contactId") String contactId
+        ) {
+        List<AddressResponse> addressResponse = addressService.listAddress(user, contactId);
+        return WebResponse.<List<AddressResponse>>builder().data(addressResponse).build();
+    }
 
 }
