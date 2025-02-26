@@ -240,4 +240,53 @@ public class AddressControllerTest {
         });
     }
 
+
+    @Test
+    void deleteAddressNotFound() throws Exception {
+        mockMvc.perform(
+                delete("/api/v1/addr/contacts/test1/addresses/tests")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-API-TOKEN", "contact1")
+        ).andExpectAll(
+                status().isNotFound()
+        ).andDo(result -> {
+            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void deleteAddressSuccess() throws Exception {
+        Contact contact = contactRepository.findById("test1").orElseThrow();
+
+        Address address = new Address();
+        address.setId("testLOG");
+        address.setContact(contact);
+        address.setStreet("Jalan");
+        address.setCity("Jakarta");
+        address.setProvince("DKI");
+        address.setCountry("Indonesia");
+        address.setPostalCode("123123");
+        addressRepository.save(address);
+
+        mockMvc.perform(
+                delete("/api/v1/addr/contacts/test1/addresses/testLOG")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-API-TOKEN", "contact1")
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+            assertNull(response.getErrors());
+            assertEquals("OK", response.getData());
+
+            assertFalse(addressRepository.existsById("test"));
+        });
+    }
+
+
 }
